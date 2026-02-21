@@ -1,149 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Campus Lost & Found</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Betania+Patmos+In&display=swap" rel="stylesheet">
-<style>
-/*Base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Betania+Patmos+In&family=Google+Sans+Code:ital,wght@0,300..800&display=swap" rel="stylesheet">
 
-body {
-    font-family: 'Inter', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Utility Classes */
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 24px;
-}
-
-.flex { display: flex; }
-.center { align-items: center; justify-content: center; }
-.column { flex-direction: column; }
-.gap-lg { gap: 24px; }
-.text-center { text-align: center; }
-
-.btn {
-    padding: 12px 28px;
-    border-radius: 10px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    display: inline-block;
-}
-
-.btn-primary {
-    background: #6366f1;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #4f46e5;
-    transform: translateY(-3px);
-}
-
-.btn-secondary {
-    background: #1e293b;
-    color: #cbd5e1;
-    border: 1px solid #334155;
-}
-
-.btn-secondary:hover {
-    background: #334155;
-    transform: translateY(-3px);
-}
-
-/* Navbar */
-.navbar {
-    padding: 20px 0;
-    border-bottom: 1px solid #1e293b;
-}
-
-.logo {
-    font-size: 20px;
-    font-weight: 600;
-    color: #f1f5f9;
-}
-
-/* ===== Hero ===== */
-.hero {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 0;
-}
-
-.hero h1 {
-    font-size: 48px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    background: linear-gradient(90deg, #6366f1, #22d3ee);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero p {
-    color: #94a3b8;
-    font-size: 18px;
-    margin-bottom: 40px;
-}
-
-/* ===== Animation ===== */
-.fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.8s ease forwards;
-}
-
-@keyframes fadeUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>
+    <title>Campus Lost & Found</title>
 </head>
-
 <body>
-<header class="header">
-  <div class="container header-content">
+
+<section class="hero">
+  <div class="container text-center">
+
     <div class="brand">
-      <img src="images/L-removebg-preview.png" alt="Campus Logo" class="logo"style="width:120px; height:120px;">
       <h1 class="title">Campus Lost & Found</h1>
     </div>
-  </div>
-</header>
 
-<!-- Hero Section -->
-<section class="hero">
-    <div class="container text-center fade-in">
-        <h1>Lost It. Find It.</h1>
-        <p>Reconnect with what matters most on campus.</p>
+    <h2 class="hero-heading">Lost It? Find It.</h2>
+    <p>"Reconnect with what matters most on campus."</p>
 
-        <div class="flex center gap-lg">
-            <a href="login.html" class="btn btn-primary">Login</a>
-            <a href="register.html" class="btn btn-secondary">Register</a>
-        </div>
+    <div class="flex center gap-lg">
+      <a href="login.html" class="btn btn-primary">Login</a>
+      <a href="register.html" class="btn btn-secondary">Register</a>
     </div>
+
+  </div>
 </section>
 
+    <script src="javascript/scripts.js" defer></script>
 </body>
 </html>

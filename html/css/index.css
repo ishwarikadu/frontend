@@ -1,0 +1,205 @@
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Layout  */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.flex {
+  display: flex;
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
+.gap-lg {
+  gap: 24px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Header */
+.header {
+  padding: 28px 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  animation: fadeDown 0.8s ease forwards;
+}
+
+/* Gradient Title */
+.title {
+  font-family: "Google Sans Code", monospace;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 60px;
+  font-weight: 500;
+  background: linear-gradient(90deg, #6366f1, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hero Section */
+.hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+
+.hero-heading {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #ffffff;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.hero p {
+  color: #94a3b8;
+  font-size: 18px;
+  margin-bottom: 40px;
+  animation: fadeUp 1s ease forwards;
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #6366f1;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #4f46e5;
+  transform: translateY(-3px);
+}
+
+.btn-secondary {
+  background: #1e293b;
+  color: #cbd5e1;
+  border: 1px solid #334155;
+}
+
+.btn-secondary:hover {
+  background: #334155;
+  transform: translateY(-3px);
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animated Base Gradient */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #0f172a;
+    background-image: 
+        radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 25px 25px;
+}
+
+/* Soft Floating Orbs */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: -1;
+  opacity: 0.25;
+  animation: float 20s ease-in-out infinite alternate;
+}
+
+body::before {
+  background: #6366f1;
+  top: -150px;
+  left: -150px;
+}
+
+body::after {
+  background: #22d3ee;
+  bottom: -150px;
+  right: -150px;
+  animation-delay: 5s;
+}
+
+/* Mouse Light Effect */
+.light {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 60%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+/* Animations */
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  from { transform: translateY(0px); }
+  to { transform: translateY(40px); }
+}
