@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Report Lost Item | Campus Lost & Found</title>
+
+  <link rel="stylesheet" href="css/lost.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar">
+  <div class="brand">
+    <span class="material-symbols-outlined">inventory</span>
+    Campus Lost & Found
+  </div>
+
+  <div class="profile-section">
+    <div id="profileCircle" class="profile-circle"></div>
+    <span id="profileName"></span>
+    <div class="top-bar">
+  <button class="nav-btn" onclick="window.location.href='dashboard.html'">
+  <span class="material-symbols-outlined">home</span>
+  Dashboard
+</button>
+</div>
+    <button class="logout-btn" type="button">
+      <span class="material-symbols-outlined">logout</span>
+      Logout
+    </button>
+    
+  </div>
+</nav>
+
+<div class="lost-container">
+  <div class="lost-card">
+
+    <div class="lost-header">
+      <span class="material-symbols-outlined lost-icon">search</span>
+      <h2>Report Lost Item</h2>
+    </div>
+
+    <p class="lost-subtitle">
+      Help us reconnect what’s been misplaced.
+    </p>
+
+    <form id="lostForm">
+
+      <input type="text" id="itemName" placeholder="Item Name" required>
+
+      <select id="category" required>
+  <option value="">Select Category</option>
+  <option value="WALLET">Wallet</option>
+  <option value="PHONE">Phone</option>
+  <option value="BAG">Bag</option>
+  <option value="LAPTOP">Laptop</option>
+  <option value="BOOKS">Books</option>
+  <option value="USB_DRIVE">USB Drive</option>
+  <option value="OTHERS">Others</option>
+</select>
+
+      <textarea id="description" placeholder="Describe the item..." required></textarea>
+
+      <div class="row-fields">
+        <input type="date" id="dateLost" required>
+        <input type="text" id="location" placeholder="Location" required>
+      </div>
+
+      <div class="file-upload">
+        <label for="image" class="file-label">
+          <span class="material-symbols-outlined">upload</span>
+          Upload Image
+        </label>
+        <input type="file" id="image" accept="image/*">
+        <p id="fileName" class="file-name"></p>
+        <div id="uploadBar" class="upload-bar"></div>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        Submit Report
+      </button>
+
+      <p id="lost_msg" class="error-msg"></p>
+
+    </form>
+
+  </div>
+</div>
+
+<script type="module" src="javascript/lost.js"></script>
+
+
+<script>
+  const username = localStorage.getItem("name") || "User";
+  const firstName = username.split(" ")[0];
+  const initial = firstName.charAt(0).toUpperCase();
+
+  const circle = document.getElementById("profileCircle");
+  const nameTag = document.getElementById("profileName");
+
+  if (circle) circle.innerHTML = initial;
+  if (nameTag) nameTag.innerHTML = firstName;
+</script>
+
+</body>
+</html>

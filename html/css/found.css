@@ -1,0 +1,320 @@
+/* ===== BASE ===== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0f172a;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 25px 25px;
+  color: #cbd5e1;
+}
+
+/* ===== NAVBAR ===== */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 40px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.brand .material-symbols-outlined {
+  color: #3A86FF;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.profile-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3A86FF, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: white;
+  box-shadow: 0 0 15px rgba(58,134,255,0.4);
+}
+
+.logout-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(58,134,255,0.2);
+  box-shadow: 0 0 12px rgba(58,134,255,0.5);
+}
+
+/* ===== CENTER CONTAINER ===== */
+
+.lost-container {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 20px;
+}
+
+/* ===== GLASS CARD ===== */
+
+.lost-card {
+  width: 480px;
+  padding: 45px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.6),
+    inset 0 0 0 1px rgba(255,255,255,0.08);
+  transition: 0.4s ease;
+}
+
+.lost-card:hover {
+  box-shadow:
+    0 35px 80px rgba(0,0,0,0.7),
+    0 0 40px rgba(58,134,255,0.25),
+    inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+
+/* ===== HEADER ===== */
+
+.lost-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.lost-icon {
+  font-size: 28px;
+  color: #3A86FF;
+}
+
+.lost-subtitle {
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 30px;
+}
+
+/* ===== INPUTS ===== */
+
+.lost-card input,
+.lost-card textarea,
+.lost-card select {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(255,255,255,0.14);
+  color: white;
+  font-size: 15px;
+  transition: 0.3s ease;
+  appearance: none;
+}
+
+.lost-card textarea {
+  height: 100px;
+  resize: none;
+}
+
+/* Custom select arrow */
+
+.lost-card select {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='18' viewBox='0 0 24 24' width='18' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+.lost-card select option {
+  background-color: #1e293b;
+  color: white;
+}
+
+.lost-card input:focus,
+.lost-card textarea:focus,
+.lost-card select:focus {
+  outline: none;
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 0 0 3px rgba(58,134,255,0.35);
+}
+.lost-card input:-webkit-autofill,
+.lost-card input:-webkit-autofill:hover,
+.lost-card input:-webkit-autofill:focus,
+.lost-card textarea:-webkit-autofill { 
+  -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,0.15) inset;
+  -webkit-text-fill-color: white; 
+  transition: background-color 5000s ease-in-out 0s;
+ }
+
+/* ===== ROW FIELDS ===== */
+
+.row-fields {
+  display: flex;
+  gap: 16px;
+}
+
+.row-fields input {
+  flex: 1;
+}
+
+/* ===== FILE UPLOAD ===== */
+
+#image {
+  display: none;
+}
+
+.file-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 14px;
+}
+
+.file-label:hover {
+  background: rgba(58,134,255,0.2);
+  box-shadow: 0 0 20px rgba(58,134,255,0.25);
+}
+
+.file-name {
+  margin-top: 10px;
+  padding: 6px 10px;
+  font-size: 13px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.upload-bar {
+  width: 0%;
+  height: 4px;
+  margin-top: 8px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #3A86FF, #6366f1);
+  transition: width 0.4s ease;
+  margin-bottom: 25px;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+
+.submit-btn {
+  width: 100%;
+  padding: 18px 0;
+  border-radius: 50px;
+  border: none;
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 16px;
+  background: linear-gradient(135deg, #0c3678, #333482);
+  color: white;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 15px 35px rgba(58,134,255,0.5),
+    0 0 25px rgba(99,102,241,0.4);
+}
+
+.submit-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.3),
+    transparent
+  );
+  transition: 0.6s ease;
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+/* ===== ERROR ===== */
+
+.error-msg {
+  margin-top: 12px;
+  color: #ff6b6b;
+  font-size: 14px;
+  text-align: center;
+}
+.top-bar {
+  padding: 20px;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #1e293b;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.nav-btn:hover {
+  background-color: #334155;
+  transform: translateY(-1px);
+}
+
+.nav-btn .material-symbols-outlined {
+  font-size: 18px;
+}

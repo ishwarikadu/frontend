@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Campus Lost & Found</title>
+
+<link rel="stylesheet" href="css/dashboard.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+      <h2 class="brand">Campus Lost & Found</h2>
+
+      <div class="profile-section">
+          <div class="profile-circle" id="profileCircle"></div>
+          <span id="profileName"></span>
+          <button class="logout-btn">
+  <span class="material-symbols-outlined">logout</span>
+  Logout
+</button>
+      </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="dashboard">
+
+      <div class="dashboard-card">
+
+          <div class="welcome">
+              <h3 id="welcomeText">Good to see you,</h3>
+              <p>Report, track, and recover items.</p>
+          </div>
+
+          <div class="option" onclick="window.location.href='lost.html'">
+              <span class="material-symbols-outlined">search</span>
+              <h4>Report Lost Item</h4>
+          </div>
+
+          <div class="option" onclick="window.location.href='found.html'">
+              <span class="material-symbols-outlined">volunteer_activism</span>
+              <h4>Report Found Item</h4>
+          </div>
+
+          <div class="option" onclick="window.location.href='history.html'">
+              <span class="material-symbols-outlined">history</span>
+              <h4>View Reports</h4>
+          </div>
+
+      </div>
+
+  </main>
+
+</div>
+<script type="module" src="javascript/scripts.js"></script>
+<script src="javascript/auth.js"></script>
+
+<script>
+const name = localStorage.getItem("name") || "User";
+const firstName = name.split(" ")[0];
+
+document.getElementById("welcomeText").innerText =
+  `Welcome back, ${firstName}`;
+
+document.getElementById("profileCircle").innerText =
+  firstName.charAt(0).toUpperCase();
+
+document.getElementById("profileName").innerText = firstName;
+</script>
+
+</body>
+</html>

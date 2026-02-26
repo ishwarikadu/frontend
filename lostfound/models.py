@@ -22,6 +22,11 @@ class Report(models.Model):
         ("FOUND", "Found"),
         ("RETURNED", "Returned"),
     ]
+    status = models.CharField(
+    max_length=20,
+    choices=STATUS_CHOICES,
+    default="LOST"
+)
 
     CATEGORY_CHOICES = [
     ("WALLET", "Wallet"),
@@ -37,7 +42,7 @@ class Report(models.Model):
     category = models.CharField(max_length=100)
     description = models.TextField()
     date = models.DateField()
-    location = models.CharField(max_length=200)
+    location = models.CharField(max_length=200, default="Unknown Location")
     image_url = models.URLField(blank=True, null=True)
     image_public_id = models.CharField(max_length=255, blank=True, null=True)
 

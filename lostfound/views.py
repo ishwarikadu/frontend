@@ -21,7 +21,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from .utils import success_response, error_response
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 # * AUTH *
 @api_view(["POST"])
@@ -116,20 +117,23 @@ def reports(request):
         )
 
 
-        return success_response(
-            "Reports fetched successfully",
-            {
-                "total": total_count,
-                "page": page,
-                "limit": limit,
-                "results": ReportSerializer(qs, many=True).data
-            }
-        )
-
     if request.method == "POST":
         serializer = ReportSerializer(data=request.data)
+
         if serializer.is_valid():
-            serializer.save(reported_by=request.user)
+            report_type = request.query_params.get("type", "lost").lower()
+
+            if report_type == "found":
+                serializer.save(
+                    reported_by=request.user,
+                    status="FOUND"
+                )
+            else:
+                serializer.save(
+                    reported_by=request.user,
+                    status="LOST"
+                )
+
             return success_response(
                 "Report created successfully",
                 serializer.data,
@@ -141,10 +145,6 @@ def reports(request):
             serializer.errors,
             status=400
         )
-
-
-
-
 
 @api_view(["GET", "PATCH", "DELETE"])
 @permission_classes([IsAuthenticated])
@@ -545,3 +545,15 @@ def report_matches(request, pk):
         MatchSerializer(qs, many=True).data,
         status=200
     )
+class CustomTokenSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        data["name"] = self.user.first_name
+        data["email"] = self.user.email
+        data["role"] = self.user.profile.role
+
+        return data
+
+class CustomLoginView(TokenObtainPairView):
+    serializer_class = CustomTokenSerializer

@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from cloudinary.uploader import upload
 from .models import Report, Match, Profile
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class ReportSerializer(serializers.ModelSerializer):
@@ -86,3 +88,15 @@ class RegisterSerializer(serializers.Serializer):
         return user
 
 
+class CustomTokenSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        data["name"] = self.user.first_name
+        data["email"] = self.user.email
+        data["role"] = self.user.profile.role
+
+        return data
+
+class CustomLoginView(TokenObtainPairView):
+    serializer_class = CustomTokenSerializer

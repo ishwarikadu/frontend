@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.http import JsonResponse
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.http import HttpResponse
+from lostfound.views import CustomLoginView
 
 def test_api(request):
     return JsonResponse({"message": "Backend is working"})
@@ -33,7 +34,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/test/", test_api),
   
-    path("api/login/", TokenObtainPairView.as_view(), name="login"),
+        path("api/login/", CustomLoginView.as_view(), name="login"),
     path("api/login/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/", include("lostfound.urls")),
 ]
