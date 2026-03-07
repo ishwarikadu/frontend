@@ -2,78 +2,119 @@
 <html lang="en">
 
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Unmatched Reports</title>
-
-<link rel="stylesheet" href="css/admin.css">
-<link rel="stylesheet" href="css/admin-unmatched.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unmatched Reports</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/admin-unmatched.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
-
 
 <body>
 
-<!-- TOP BAR -->
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <h1>Admin Control Panel</h1>
+    <div class="profile-section">
+      <div class="profile-circle" id="profileCircle">I</div>
+      <span id="profileName">Ishwari</span>
+    </div>
+  </div>
 
-<div class="top-bar">
+  <!-- NAV -->
+  <div class="admin-nav">
 
-<h1>Admin Control Panel</h1>
+    <button onclick="location.href='admin-dashboard.html'">
+      <span class="material-symbols-outlined">inbox</span>
+      Pending
+    </button>
 
-<div class="profile-section">
+    <button onclick="location.href='admin-approved.html'">
+      <span class="material-symbols-outlined">check_circle</span>
+      Approved
+    </button>
 
-<div class="profile-circle" id="profileCircle">I</div>
+    <button onclick="location.href='admin-rejected.html'">
+      <span class="material-symbols-outlined">cancel</span>
+      Rejected
+    </button>
 
-<span id="profileName">Ishwari</span>
+    <button class="active">
+      <span class="material-symbols-outlined">block</span>
+      Unmatched
+    </button>
 
-</div>
+  </div>
 
-</div>
+  <!-- CONTENT -->
+  <div class="matches-container">
 
+    <h2>Unmatched Reports</h2>
 
-<!-- NAV -->
+    <!-- Filter Bar -->
+    <div class="filter-bar">
 
-<div class="admin-nav">
+      <select id="filterStatus" class="filter-input">
+        <option value="">All Statuses</option>
+        <option value="LOST">Lost</option>
+        <option value="FOUND">Found</option>
+      </select>
 
-<button onclick="location.href='admin-dashboard.html'">
-<span class="material-symbols-outlined">inbox</span>
-Pending
-</button>
+      <select id="filterCategory" class="filter-input">
+        <option value="">All Categories</option>
+        <option value="PHONE">Phone</option>
+        <option value="LAPTOP">Laptop</option>
+        <option value="WALLET">Wallet</option>
+        <option value="KEYS">Keys</option>
+        <option value="BAG">Bag</option>
+        <option value="OTHER">Other</option>
+      </select>
 
-<button onclick="location.href='admin-approved.html'">
-<span class="material-symbols-outlined">check_circle</span>
-Approved
-</button>
+      <input
+        type="text"
+        id="filterLocation"
+        class="filter-input"
+        placeholder="Location..."
+      />
 
-<button onclick="location.href='admin-rejected.html'">
-<span class="material-symbols-outlined">cancel</span>
-Rejected
-</button>
+      <input
+        type="text"
+        id="filterSearch"
+        class="filter-input"
+        placeholder="Search item name..."
+      />
 
-<button class="active">
-<span class="material-symbols-outlined">block</span>
-Unmatched
-</button>
+      <input
+        type="date"
+        id="filterDateFrom"
+        class="filter-input"
+        title="Date from"
+      />
 
-</div>
+      <input
+        type="date"
+        id="filterDateTo"
+        class="filter-input"
+        title="Date to"
+      />
 
+      <button id="applyFilters" class="filter-btn apply">
+        <span class="material-symbols-outlined">search</span>
+        Search
+      </button>
 
-<!-- CONTENT -->
+      <button id="clearFilters" class="filter-btn clear">
+        <span class="material-symbols-outlined">close</span>
+        Clear
+      </button>
 
-<div class="matches-container">
+    </div>
 
-<h2>Unmatched Reports</h2>
+    <div id="reportsContainer" class="matches-grid"></div>
 
-<div id="reportsContainer" class="matches-grid"></div>
+  </div>
 
-</div>
-
-
-<script type="module" src="javascript/admin-unmatched.js"></script>
+  <script type="module" src="javascript/admin-unmatched.js"></script>
 
 </body>
 </html>

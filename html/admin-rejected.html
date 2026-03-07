@@ -51,12 +51,29 @@
 
     <h2>Rejected Matches</h2>
 
-    <div class="matches-grid" id="matchesContainer">
-      <div class="loading-state">
-        <span class="material-symbols-outlined spin">autorenew</span>
-        <p>Loading rejected matches...</p>
-      </div>
+    <!-- Search Bar -->
+    <div class="filter-bar">
+
+      <input
+        type="text"
+        id="filterSearch"
+        class="filter-input"
+        placeholder="Search item name or reason..."
+      />
+
+      <button id="applyFilters" class="filter-btn apply">
+        <span class="material-symbols-outlined">search</span>
+        Search
+      </button>
+
+      <button id="clearFilters" class="filter-btn clear">
+        <span class="material-symbols-outlined">close</span>
+        Clear
+      </button>
+
     </div>
+
+    <div class="matches-grid" id="matchesContainer"></div>
 
   </div>
 

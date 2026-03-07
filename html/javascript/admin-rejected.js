@@ -2,23 +2,52 @@ import { apiRequest } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   setProfile();
+  setupFilters();
   fetchRejectedMatches();
 });
 
 
-/* ---------------- Fetch rejected matches ---------------- */
+/* ── Filters ── */
+
+function setupFilters() {
+  const applyBtn = document.getElementById("applyFilters");
+  const clearBtn = document.getElementById("clearFilters");
+
+  if (applyBtn) applyBtn.addEventListener("click", fetchRejectedMatches);
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      document.getElementById("filterSearch").value = "";
+      fetchRejectedMatches();
+    });
+  }
+}
+
+
+/* ── Fetch rejected matches ── */
 
 async function fetchRejectedMatches() {
 
   const container = document.getElementById("matchesContainer");
   if (!container) return;
 
+  container.innerHTML = `
+    <div class="loading-state">
+      <span class="material-symbols-outlined spin">autorenew</span>
+      <p>Loading rejected matches...</p>
+    </div>
+  `;
+
+  // build query params
+  const params = new URLSearchParams();
+  const search = document.getElementById("filterSearch")?.value;
+  if (search) params.append("search", search);
+  const query = params.toString() ? `?${params.toString()}` : "";
+
   try {
 
-    // Try both possible endpoint paths
-    let res = await apiRequest("/api/matches/rejected/");
+    const res = await apiRequest(`/api/matches/rejected/${query}`);
 
-    // If 500, the route might be different - log the actual response
     if (!res.ok) {
       const text = await res.text();
       console.error("API error response:", text);
@@ -26,19 +55,19 @@ async function fetchRejectedMatches() {
     }
 
     const data = await res.json();
-
-    console.log("Rejected matches data:", data); // debug - remove later
+    console.log("Rejected matches data:", data);
 
     const matches =
-      Array.isArray(data)          ? data          :
-      Array.isArray(data.message)  ? data.message  :
-      Array.isArray(data.results)  ? data.results  :
-      Array.isArray(data.data)     ? data.data      :
+      Array.isArray(data)         ? data         :
+      Array.isArray(data.message) ? data.message :
+      Array.isArray(data.results) ? data.results :
+      Array.isArray(data.data)    ? data.data    :
       [];
 
     if (!matches.length) {
       container.innerHTML = `
-        <div class="empty-state">
+        <div class="loading-state">
+          <span class="material-symbols-outlined">inbox</span>
           <p>No rejected matches found.</p>
         </div>
       `;
@@ -53,7 +82,8 @@ async function fetchRejectedMatches() {
   } catch (err) {
     console.error("Rejected matches error:", err);
     container.innerHTML = `
-      <div class="empty-state">
+      <div class="loading-state">
+        <span class="material-symbols-outlined">error</span>
         <p>Failed to load rejected matches. Check console for details.</p>
       </div>
     `;
@@ -62,7 +92,7 @@ async function fetchRejectedMatches() {
 }
 
 
-/* ---------------- Build match card ---------------- */
+/* ── Build match card ── */
 
 function buildMatchCard(match) {
 
@@ -73,7 +103,6 @@ function buildMatchCard(match) {
   const found = match.found_report || {};
 
   card.innerHTML = `
-
     <div class="match-row">
 
       <div class="report-block">
@@ -105,17 +134,15 @@ function buildMatchCard(match) {
       <p><b>Reason:</b> ${match.reason || "-"}</p>
       <div class="rejected-badge">✕ Rejected</div>
     </div>
-
   `;
 
   return card;
 }
 
 
-/* ---------------- Profile ---------------- */
+/* ── Profile ── */
 
 function setProfile() {
-
   const username  = localStorage.getItem("name") || "User";
   const firstName = username.split(" ")[0];
   const initial   = firstName.charAt(0).toUpperCase();
@@ -125,5 +152,4 @@ function setProfile() {
 
   if (circle) circle.innerText = initial;
   if (name)   name.innerText   = firstName;
-
 }

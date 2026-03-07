@@ -33,7 +33,8 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
-
+ALLOWED_HOSTS=ALLOWED_HOSTS or ["*"]  # default to allowing all hosts if not set
+ALLOWED_HOSTS= ["lostfound.onrender.com"]
 
 
 # Application definition
@@ -88,6 +89,7 @@ MIDDLEWARE = [
         # add corsheaders 
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -204,3 +206,16 @@ AI_API_KEY = os.getenv("AI_API_KEY")
 if not AI_API_KEY:
     raise RuntimeError("AI_API_KEY not set in environment") 
 
+
+# settings.py
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'cleanup-old-matches': {
+        'task': 'lostfound.tasks.cleanup_old_matches',
+        'schedule': crontab(hour=0, minute=0),  # runs every midnight
+    },
+}
+# Static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

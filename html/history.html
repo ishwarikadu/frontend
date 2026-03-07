@@ -23,11 +23,11 @@
     <div id="profileCircle" class="profile-circle"></div>
     <span id="profileName"></span>
     <div class="top-bar">
-  <button class="nav-btn" onclick="window.location.href='dashboard.html'">
-  <span class="material-symbols-outlined">home</span>
-  Dashboard
-</button>
-</div>
+      <button class="nav-btn" onclick="window.location.href='dashboard.html'">
+        <span class="material-symbols-outlined">home</span>
+        Dashboard
+      </button>
+    </div>
     <button class="logout-btn" onclick="logout()">
       <span class="material-symbols-outlined">logout</span>
       Logout
@@ -37,8 +37,63 @@
 
 <div class="reports-container">
   <h2 class="reports-title">All Reports</h2>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+
+    <select id="filterStatus" class="filter-input">
+      <option value="">All Statuses</option>
+      <option value="LOST">Lost</option>
+      <option value="FOUND">Found</option>
+      <option value="RETURNED">Returned</option>
+    </select>
+
+    <select id="filterCategory" class="filter-input">
+      <option value="">All Categories</option>
+      <option value="PHONE">Phone</option>
+      <option value="LAPTOP">Laptop</option>
+      <option value="WALLET">Wallet</option>
+      <option value="KEYS">Keys</option>
+      <option value="BAG">Bag</option>
+      <option value="OTHER">Other</option>
+    </select>
+
+    <input
+      type="text"
+      id="filterLocation"
+      class="filter-input"
+      placeholder="Location..."
+    />
+
+    <input
+      type="date"
+      id="filterDateFrom"
+      class="filter-input"
+      title="Date from"
+    />
+
+    <input
+      type="date"
+      id="filterDateTo"
+      class="filter-input"
+      title="Date to"
+    />
+
+    <button id="applyFilters" class="filter-btn apply">
+      <span class="material-symbols-outlined">search</span>
+      Search
+    </button>
+
+    <button id="clearFilters" class="filter-btn clear">
+      <span class="material-symbols-outlined">close</span>
+      Clear
+    </button>
+
+  </div>
+
   <div id="reportsGrid" class="reports-grid"></div>
 </div>
+
 <script type="module" src="javascript/history.js"></script>
 <script src="javascript/auth.js"></script>
 <script src="javascript/scripts.js"></script>

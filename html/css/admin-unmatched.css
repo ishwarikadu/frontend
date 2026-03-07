@@ -15,3 +15,102 @@
   color:white;
 
 }
+/* ── paste these at the bottom of your admin-unmatched.css ── */
+
+/* Filter Bar */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+  align-items: center;
+}
+
+.filter-input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  color: #e5e7eb;
+  font-size: 14px;
+  backdrop-filter: blur(8px);
+  outline: none;
+  transition: border 0.2s;
+}
+
+.filter-input:focus {
+  border-color: #4f8cff;
+}
+
+.filter-input::placeholder {
+  color: rgba(255,255,255,0.3);
+}
+
+.filter-input option {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn.apply {
+  background: linear-gradient(135deg, #4f8cff, #6366f1);
+  color: white;
+}
+
+.filter-btn.apply:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(79,140,255,0.4);
+}
+
+.filter-btn.clear {
+  background: rgba(255,255,255,0.08);
+  color: #94a3b8;
+}
+
+.filter-btn.clear:hover {
+  background: rgba(255,255,255,0.15);
+  color: #e5e7eb;
+}
+
+.filter-btn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* Loading / Empty states */
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255,255,255,0.3);
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  grid-column: 1 / -1;
+}
+
+.loading-state .material-symbols-outlined {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}

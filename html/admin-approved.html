@@ -2,79 +2,133 @@
 <html lang="en">
 <head>
 
-<meta charset="UTF-8">
-<title>Approved Matches</title>
+  <meta charset="UTF-8">
+  <title>Approved Matches</title>
 
-<link rel="stylesheet" href="css/admin-approved.css">
-<link rel="stylesheet" href="css/admin.css">
-<link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/admin-approved.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/global.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="top-bar">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <h1>Admin Control Panel</h1>
+    <div class="profile-section">
+      <div id="profileCircle" class="profile-circle"></div>
+      <span id="profileName"></span>
+    </div>
+  </div>
 
-<h1>Admin Control Panel</h1>
+  <!-- Nav -->
+  <div class="admin-nav">
 
-<div class="profile-section">
-<div id="profileCircle" class="profile-circle"></div>
-<span id="profileName"></span>
-</div>
+    <button onclick="window.location.href='admin-dashboard.html'">
+      <span class="material-symbols-outlined">pending_actions</span>
+      Pending
+    </button>
 
-</div>
+    <button class="active">
+      <span class="material-symbols-outlined">task_alt</span>
+      Approved
+    </button>
 
+    <button onclick="window.location.href='admin-rejected.html'">
+      <span class="material-symbols-outlined">cancel</span>
+      Rejected
+    </button>
 
-<div class="admin-nav">
+    <button onclick="window.location.href='admin-unmatched.html'">
+      <span class="material-symbols-outlined">help</span>
+      Unmatched
+    </button>
 
-<button onclick="window.location.href='admin-dashboard.html'">
-<span class="material-symbols-outlined">pending_actions</span>
-Pending
-</button>
+  </div>
 
-<button class="active">
-<span class="material-symbols-outlined">task_alt</span>
-Approved
-</button>
+  <!-- Content -->
+  <div class="matches-container">
 
-<button onclick="window.location.href='admin-rejected.html'">
-<span class="material-symbols-outlined">cancel</span>
-Rejected
-</button>
+    <h2>Approved Matches</h2>
 
-<button onclick="window.location.href='admin-unmatched.html'">
-<span class="material-symbols-outlined">help</span>
-Unmatched
-</button>
+    <!-- Filter Bar -->
+    <div class="filter-bar">
 
-</div>
+      <input
+        type="text"
+        id="filterLocation"
+        class="filter-input"
+        placeholder="Location..."
+      />
 
+      <input
+        type="text"
+        id="filterSearch"
+        class="filter-input"
+        placeholder="Search item name..."
+      />
 
-<div class="matches-container">
+      <input
+        type="number"
+        id="filterMinScore"
+        class="filter-input"
+        placeholder="Min score"
+        min="0" max="1" step="0.1"
+      />
 
-<h2>Approved Matches</h2>
+      <input
+        type="number"
+        id="filterMaxScore"
+        class="filter-input"
+        placeholder="Max score"
+        min="0" max="1" step="0.1"
+      />
 
-<div id="approvedMatches" class="matches-grid"></div>
+      <input
+        type="date"
+        id="filterDateFrom"
+        class="filter-input"
+        title="Approved from"
+      />
 
-</div>
+      <input
+        type="date"
+        id="filterDateTo"
+        class="filter-input"
+        title="Approved to"
+      />
 
+      <button id="applyFilters" class="filter-btn apply">
+        <span class="material-symbols-outlined">search</span>
+        Search
+      </button>
 
-<script type="module" src="javascript/admin-approved.js"></script>
-<script src="javascript/auth.js"></script>
-<script src="javascript/scripts.js"></script>
+      <button id="clearFilters" class="filter-btn clear">
+        <span class="material-symbols-outlined">close</span>
+        Clear
+      </button>
 
-<script>
+    </div>
 
-const username = localStorage.getItem("name") || "Admin";
-const firstName = username.split(" ")[0];
-const initial = firstName.charAt(0).toUpperCase();
+    <div id="approvedMatches" class="matches-grid"></div>
 
-document.getElementById("profileCircle").innerText = initial;
-document.getElementById("profileName").innerText = firstName;
+  </div>
 
-</script>
+  <script type="module" src="javascript/admin-approved.js"></script>
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/scripts.js"></script>
+
+  <script>
+    const username  = localStorage.getItem("name") || "Admin";
+    const firstName = username.split(" ")[0];
+    const initial   = firstName.charAt(0).toUpperCase();
+
+    document.getElementById("profileCircle").innerText = initial;
+    document.getElementById("profileName").innerText   = firstName;
+  </script>
 
 </body>
 </html>
