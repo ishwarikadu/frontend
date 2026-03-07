@@ -34,7 +34,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
 ALLOWED_HOSTS=ALLOWED_HOSTS or ["*"]  # default to allowing all hosts if not set
-ALLOWED_HOSTS= ["lostfound.onrender.com"]
+ALLOWED_HOSTS = ["lostfound.onrender.com", "frontend-ieek.onrender.com"]
 
 
 # Application definition
@@ -183,7 +183,9 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # frontend access
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://frontend-ieek.onrender.com",
+]
 
 # add frontend live server url
 CORS_ALLOWED_ORIGINS = [
