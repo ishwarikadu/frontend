@@ -1,0 +1,209 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: radial-gradient(circle at 20% 20%, #0f172a, #020617);
+  color: #e5e7eb;
+  min-height: 100vh;
+}
+
+/* ---------- TOP BAR ---------- */
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 80px;
+}
+
+.top-bar h1 {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f8cff, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* ---------- NAV ---------- */
+
+.admin-nav {
+  padding: 0 80px 35px 80px;
+  display: flex;
+  gap: 16px;
+}
+
+.admin-nav button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: #e5e7eb;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(12px);
+}
+
+.admin-nav button:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+
+.admin-nav button.active {
+  background: linear-gradient(135deg, #4f8cff, #6366f1);
+  color: white;
+  box-shadow:
+    0 0 15px rgba(79,140,255,0.5),
+    0 0 30px rgba(99,102,241,0.4);
+}
+
+.admin-nav .material-symbols-outlined {
+  font-size: 18px;
+}
+
+/* ---------- CONTAINER ---------- */
+
+.matches-container {
+  padding: 20px 80px 80px 80px;
+}
+
+.matches-container h2 {
+  margin-bottom: 25px;
+}
+
+/* ---------- GRID ---------- */
+
+.matches-grid {
+  display: grid;
+  gap: 30px;
+}
+
+/* ---------- MATCH CARD ---------- */
+
+.match-card {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.6),
+    inset 0 0 0 1px rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---------- REPORT ROW ---------- */
+
+.match-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+/* ---------- REPORT BLOCK ---------- */
+
+.report-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-block h3 {
+  font-size: 16px;
+  opacity: 0.7;
+}
+
+.report-block h4 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* ---------- IMAGE ---------- */
+
+.report-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+
+/* ---------- EMAIL ---------- */
+
+.email {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* ---------- FOOTER ---------- */
+
+.match-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ---------- REJECTED BADGE ---------- */
+
+.rejected-badge {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+  background: linear-gradient(90deg, #dc2626, #ef4444);
+  color: white;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- EMPTY / LOADING STATES ---------- */
+
+.empty-state,
+.loading-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: rgba(255,255,255,0.3);
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.loading-state .material-symbols-outlined {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}

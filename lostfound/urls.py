@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import ( current_user, register, report_matches, reports, report_detail, mark_returned,  matches,
+from .views import ( create_match, current_user, register, report_matches, reports, report_detail, mark_returned,  matches,
     matches_pending,
     matches_approved,
     matches_rejected,
     approve_match,
-    reject_match,
+    reject_match, suggest_matches,
     unmatched_reports,
     ai_match)
 
@@ -26,5 +26,7 @@ urlpatterns = [
     path("ai/match/", ai_match),
     path("reports/<int:pk>/matches/", report_matches),
     path("me/", current_user),
+     path("create_match/",create_match),
+     path("reports/<int:pk>/suggest-matches/", suggest_matches),
 
     ]

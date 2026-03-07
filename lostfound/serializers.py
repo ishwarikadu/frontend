@@ -5,9 +5,14 @@ from .models import Report, Match, Profile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-
 class ReportSerializer(serializers.ModelSerializer):
+
     image = serializers.ImageField(write_only=True, required=False)
+
+    reported_by_email = serializers.EmailField(
+        source="reported_by.email",
+        read_only=True
+    )
 
     class Meta:
         model = Report
@@ -23,12 +28,14 @@ class ReportSerializer(serializers.ModelSerializer):
             "status",
             "is_matched",
             "created_at",
+            "reported_by_email"
         ]
+
         read_only_fields = [
             "image_url",
             "status",
             "is_matched",
-            "created_at",
+            "created_at"
         ]
     def validate_image(self, image):
         # max size: 5MB
@@ -50,42 +57,68 @@ class ReportSerializer(serializers.ModelSerializer):
             validated_data["image_public_id"] = result.get("public_id")
 
         return super().create(validated_data)
+    reported_by_email = serializers.EmailField(
+source="reported_by.email",
+read_only=True
+)
 
 class MatchSerializer(serializers.ModelSerializer):
+
+    lost_report = ReportSerializer(read_only=True)
+    found_report = ReportSerializer(read_only=True)
+
+    lost_reporter_email = serializers.EmailField(
+        source="lost_report.reported_by.email",
+        read_only=True
+    )
+
+    found_reporter_email = serializers.EmailField(
+        source="found_report.reported_by.email",
+        read_only=True
+    )
+
     class Meta:
         model = Match
         fields = "__all__"
-        read_only_fields = ["id", "created_at","approved_by", "approved_at"]
-
+        read_only_fields = [
+            "created_at",
+            "status",
+            "rejected_by_lost_reporter",
+            "rejected_by_found_reporter",
+            "is_resolved",
+            "rejection_reason",
+            "resolved_at",
+            "resolved_by",
+            "resolved_by_email",
+            "id",
+            "lost_report",
+            "found_report"
+        ]
 
 class RegisterSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=150)
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
-    role = serializers.ChoiceField(choices=["user", "admin"])
 
-    def create(self, validated_data):
-        name = validated_data["name"]
-        email = validated_data["email"]
-        password = validated_data["password"]
-        role = validated_data["role"]
+def create(self, validated_data):
+    name = validated_data["name"]
+    email = validated_data["email"]
+    password = validated_data["password"]
 
-        user = User.objects.create_user(
-            username=email,
-            email=email,
-            password=password,
-            first_name=name
-        )
-        if role == "admin":
-            user.is_staff = True
-            user.save()
+    user = User.objects.create_user(
+        username=email,
+        email=email,
+        password=password,
+        first_name=name
+    )
 
-        Profile.objects.create(
-            user=user,
-            role=role.upper()   
-        )
+    # Force default user
+    Profile.objects.create(
+        user=user,
+        role="USER"
+    )
 
-        return user
+    return user
 
 
 class CustomTokenSerializer(TokenObtainPairSerializer):
@@ -94,9 +127,8 @@ class CustomTokenSerializer(TokenObtainPairSerializer):
 
         data["name"] = self.user.first_name
         data["email"] = self.user.email
-        data["role"] = self.user.profile.role
+        data["role"] = "admin" if self.user.is_staff else "user"
 
         return data
 
-class CustomLoginView(TokenObtainPairView):
-    serializer_class = CustomTokenSerializer
+

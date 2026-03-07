@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from cloudinary.uploader import upload, destroy
 from urllib3 import request
-from .serializers import RegisterSerializer, ReportSerializer
+from .serializers import CustomTokenSerializer, RegisterSerializer, ReportSerializer
 from django.utils import timezone
 from .serializers import MatchSerializer
 from django.conf import settings
@@ -42,6 +42,10 @@ def register(request):
         serializer.errors,
         status=status.HTTP_400_BAD_REQUEST
     )
+
+class CustomLoginView(TokenObtainPairView):
+    serializer_class = CustomTokenSerializer
+    
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def current_user(request):
@@ -306,6 +310,50 @@ def matches(request):
         status=400
 )
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def create_match(request):
+
+    lost_id = request.data.get("lost_id")
+    found_id = request.data.get("found_id")
+    score = request.data.get("score")
+    reason = request.data.get("reason")
+
+    try:
+        lost = Report.objects.get(pk=lost_id, status="LOST")
+        found = Report.objects.get(pk=found_id, status="FOUND")
+    except Report.DoesNotExist:
+        return error_response("Invalid report IDs", status=400)
+
+    #  Only owner of LOST report can claim
+    if lost.reported_by != request.user:
+        return error_response("Only the LOST reporter can request claim", status=403)
+
+    #  Prevent double claiming
+    if found.is_matched:
+        return error_response("This item is already matched", status=400)
+
+    #  Prevent duplicate pending match
+    if Match.objects.filter(
+        lost_report=lost,
+        found_report=found,
+        status="PENDING"
+    ).exists():
+        return error_response("Match already requested", status=400)
+
+    match = Match.objects.create(
+        lost_report=lost,
+        found_report=found,
+        match_score=score,
+        reason=reason,
+        status="PENDING"
+    )
+
+    return success_response(
+        "Match request sent to admin",
+        MatchSerializer(match).data,
+        status=201
+    )
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -366,7 +414,7 @@ def matches_rejected(request):
     match.approved_at = timezone.now()
 
 
-@api_view(["PATCH"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def approve_match(request, pk):
     if not request.user.is_staff:
@@ -407,7 +455,7 @@ def approve_match(request, pk):
 
 # * NOT APPROVE MATCH *
 
-@api_view(["PATCH"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def reject_match(request, pk):
     if not request.user.is_staff:
@@ -489,21 +537,15 @@ def ai_match(request):
     for candidate, sim in zip(candidates, similarities):
         score, reason = calculate_score(target, candidate, sim)
 
-        if score >= 0.8:
-            Match.objects.create(
-                lost_report=target if target.status == "LOST" else candidate,
-                found_report=candidate if target.status == "LOST" else target,
-                match_score=round(score, 2),
-                reason=reason,
-                status="PENDING"
-            )
-           
+        for candidate, sim in zip(candidates, similarities):
+         score, reason = calculate_score(target, candidate, sim)
 
-        results.append({
-            "report_id": candidate.id,
-            "score": round(score, 2),
-            "reason": reason,
-        })
+    results.append({
+        "report_id": candidate.id,
+        "score": round(score, 2),
+        "reason": reason,
+    })
+
 
     # TOP 5 MATCHES
     results = sorted(
@@ -545,15 +587,101 @@ def report_matches(request, pk):
         MatchSerializer(qs, many=True).data,
         status=200
     )
-class CustomTokenSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
 
-        data["name"] = self.user.first_name
-        data["email"] = self.user.email
-        data["role"] = self.user.profile.role
 
-        return data
 
-class CustomLoginView(TokenObtainPairView):
-    serializer_class = CustomTokenSerializer
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def suggest_matches(request, pk):
+    try:
+        target = Report.objects.get(pk=pk)
+    except Report.DoesNotExist:
+        return error_response("Report not found", status=404)
+
+    # user can only request suggestions for own report
+    if target.reported_by != request.user and not request.user.is_staff:
+        return error_response("Permission denied", status=403)
+
+    if target.status == "LOST":
+        candidates = Report.objects.filter(status="FOUND", is_matched=False)
+    else:
+        candidates = Report.objects.filter(status="LOST", is_matched=False)
+
+    candidate_texts = [c.description or "" for c in candidates]
+
+    similarities = compute_similarities(
+        target.description or "",
+        candidate_texts
+    )
+
+    results = []
+    if not candidates.exists():
+     return success_response(
+        "No potential matches found",
+        {
+            "report_id": target.id,
+            "matches": []
+        },
+        status=200
+    )
+    
+    if target.status == "LOST":
+     candidates = Report.objects.filter(
+        status="FOUND",
+        is_matched=False
+    ).exclude(id=target.id)
+    else:
+     candidates = Report.objects.filter(
+        status="LOST",
+        is_matched=False
+    ).exclude(id=target.id)
+     
+    for candidate, sim in zip(candidates, similarities):
+        score, reason = calculate_score(target, candidate, sim)
+
+        results.append({
+    "report_id": candidate.id,
+    "item_name": candidate.item_name,
+    "category": candidate.category,
+    "location": candidate.location,
+    "date": candidate.date,
+    "image_url": candidate.image_url,
+    "score": round(score, 2),
+    "reason": reason,
+})
+        if not candidates.exists():
+          return success_response(
+        "No potential matches found",
+        {
+            "report_id": target.id,
+            "matches": []
+        },
+        status=200
+    )
+    results = sorted(results, key=lambda x: x["score"], reverse=True)[:5]
+
+    return success_response(
+        "Suggestions generated",
+        {
+            "report_id": target.id,
+            "matches": results
+        },
+        status=200
+    )
+    
+    pending_exists = Match.objects.filter(
+    found_report=candidate,
+    status="PENDING"
+).exists()
+
+    results.append({
+    "report_id": candidate.id,
+    "item_name": candidate.item_name,
+    "category": candidate.category,
+    "location": candidate.location,
+    "date": candidate.date,
+    "image_url": candidate.image_url,
+    "score": round(score, 2),
+    "reason": reason,
+    "pending_claim": pending_exists
+})

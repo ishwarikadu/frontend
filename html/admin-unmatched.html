@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Unmatched Reports</title>
+
+<link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/admin-unmatched.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+</head>
+
+
+<body>
+
+<!-- TOP BAR -->
+
+<div class="top-bar">
+
+<h1>Admin Control Panel</h1>
+
+<div class="profile-section">
+
+<div class="profile-circle" id="profileCircle">I</div>
+
+<span id="profileName">Ishwari</span>
+
+</div>
+
+</div>
+
+
+<!-- NAV -->
+
+<div class="admin-nav">
+
+<button onclick="location.href='admin-dashboard.html'">
+<span class="material-symbols-outlined">inbox</span>
+Pending
+</button>
+
+<button onclick="location.href='admin-approved.html'">
+<span class="material-symbols-outlined">check_circle</span>
+Approved
+</button>
+
+<button onclick="location.href='admin-rejected.html'">
+<span class="material-symbols-outlined">cancel</span>
+Rejected
+</button>
+
+<button class="active">
+<span class="material-symbols-outlined">block</span>
+Unmatched
+</button>
+
+</div>
+
+
+<!-- CONTENT -->
+
+<div class="matches-container">
+
+<h2>Unmatched Reports</h2>
+
+<div id="reportsContainer" class="matches-grid"></div>
+
+</div>
+
+
+<script type="module" src="javascript/admin-unmatched.js"></script>
+
+</body>
+</html>

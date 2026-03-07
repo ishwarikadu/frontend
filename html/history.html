@@ -6,7 +6,9 @@
 
   <link rel="stylesheet" href="css/lost.css">
   <link rel="stylesheet" href="css/history.css">
+  <link rel="stylesheet" href="css/global.css">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 
 <body>
@@ -39,9 +41,8 @@
 </div>
 <script type="module" src="javascript/history.js"></script>
 <script src="javascript/auth.js"></script>
+<script src="javascript/scripts.js"></script>
 
-</body>
-</html>
 <script>
   const username = localStorage.getItem("name") || "User";
   const firstName = username.split(" ")[0];
@@ -53,3 +54,6 @@
   if (circle) circle.innerHTML = initial;
   if (nameTag) nameTag.innerHTML = firstName;
 </script>
+
+</body>
+</html>

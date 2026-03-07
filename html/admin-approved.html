@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Approved Matches</title>
+
+<link rel="stylesheet" href="css/admin-approved.css">
+<link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/global.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="top-bar">
+
+<h1>Admin Control Panel</h1>
+
+<div class="profile-section">
+<div id="profileCircle" class="profile-circle"></div>
+<span id="profileName"></span>
+</div>
+
+</div>
+
+
+<div class="admin-nav">
+
+<button onclick="window.location.href='admin-dashboard.html'">
+<span class="material-symbols-outlined">pending_actions</span>
+Pending
+</button>
+
+<button class="active">
+<span class="material-symbols-outlined">task_alt</span>
+Approved
+</button>
+
+<button onclick="window.location.href='admin-rejected.html'">
+<span class="material-symbols-outlined">cancel</span>
+Rejected
+</button>
+
+<button onclick="window.location.href='admin-unmatched.html'">
+<span class="material-symbols-outlined">help</span>
+Unmatched
+</button>
+
+</div>
+
+
+<div class="matches-container">
+
+<h2>Approved Matches</h2>
+
+<div id="approvedMatches" class="matches-grid"></div>
+
+</div>
+
+
+<script type="module" src="javascript/admin-approved.js"></script>
+<script src="javascript/auth.js"></script>
+<script src="javascript/scripts.js"></script>
+
+<script>
+
+const username = localStorage.getItem("name") || "Admin";
+const firstName = username.split(" ")[0];
+const initial = firstName.charAt(0).toUpperCase();
+
+document.getElementById("profileCircle").innerText = initial;
+document.getElementById("profileName").innerText = firstName;
+
+</script>
+
+</body>
+</html>

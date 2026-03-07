@@ -1,0 +1,17 @@
+.unmatched-badge{
+
+  width:100%;
+
+  padding:12px;
+
+  border-radius:12px;
+
+  text-align:center;
+
+  font-weight:600;
+
+  background:linear-gradient(90deg,#64748b,#94a3b8);
+
+  color:white;
+
+}

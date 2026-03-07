@@ -1,0 +1,28 @@
+/* paste this into your global/shared CSS file */
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #475569;
+}
+
+.loading-state p,
+.empty-state p {
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+.loading-state .material-symbols-outlined,
+.empty-state .material-symbols-outlined {
+  font-size: 2.5rem;
+  color: #374151;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}

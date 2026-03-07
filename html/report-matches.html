@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Top Matches | Campus Lost & Found</title>
+
+  <link rel="stylesheet" href="css/lost.css">
+  <link rel="stylesheet" href="css/report-matches.css">
+  <link rel="stylesheet" href="css/global.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="top-section">
+
+    <button class="nav-btn" onclick="window.location.href='dashboard.html'">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Dashboard
+    </button>
+
+    <div class="profile-section">
+      <div id="profileCircle" class="profile-circle"></div>
+      <span id="profileName"></span>
+    </div>
+
+  </div>
+
+  <div class="matches-container">
+    <h2 class="matches-title">Top AI Matches</h2>
+    <div id="matchesList" class="matches-grid"></div>
+
+  <script type="module" src="javascript/report-matches.js?v=2"></script>
+  <script src="javascript/auth.js"></script>
+  <script src="javascript/scripts.js"></script>
+
+  <script>
+    const username = localStorage.getItem("name") || "User";
+    const firstName = username.split(" ")[0];
+    const initial = firstName.charAt(0).toUpperCase();
+
+    const circle = document.getElementById("profileCircle");
+    const nameTag = document.getElementById("profileName");
+
+    if (circle) circle.innerText = initial;
+    if (nameTag) nameTag.innerText = firstName;
+  </script>
+
+</body>
+</html>

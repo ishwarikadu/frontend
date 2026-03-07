@@ -19,7 +19,7 @@ async function login() {
                 password: password
             })
         });
-
+    
         const data = await res.json();
         console.log("LOGIN RESPONSE:", data);
 
@@ -33,8 +33,12 @@ async function login() {
         localStorage.setItem("email", email);
         localStorage.setItem("name", data.name);
 localStorage.setItem("role", data.role);
-        window.location.href = "dashboard.html";
 
+if (data.role === "admin") {
+  window.location.href = "admin-dashboard.html";
+} else {
+  window.location.href = "dashboard.html";
+}
     } catch (err) {
         console.error(err);
         msgEl.innerText = "Login failed. Please try again.";
