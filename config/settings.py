@@ -34,7 +34,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
 ALLOWED_HOSTS=ALLOWED_HOSTS or ["*"]  # default to allowing all hosts if not set
-ALLOWED_HOSTS = ["lostfound.onrender.com", "frontend-ieek.onrender.com"]
+ALLOWED_HOSTS = ["frontend-z3se.onrender.com", "deft-truffle-69aa7f.netlify.app"]  # restrict to frontend domains
 
 
 # Application definition
@@ -186,6 +186,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5500",
     "http://localhost:5500",
+    "https://frontend-z3se.onrender.com",
+    "https://deft-truffle-69aa7f.netlify.app",
 ]
 
 import cloudinary

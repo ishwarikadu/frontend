@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "https://frontend-z3se.onrender.com";
 
 export async function apiRequest(endpoint, options = {}) {
   const access = localStorage.getItem("access");
