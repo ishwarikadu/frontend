@@ -100,26 +100,24 @@ class RegisterSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
-def create(self, validated_data):
-    name = validated_data["name"]
-    email = validated_data["email"]
-    password = validated_data["password"]
+    def create(self, validated_data):  # ← indented inside the class
+        name = validated_data["name"]
+        email = validated_data["email"]
+        password = validated_data["password"]
 
-    user = User.objects.create_user(
-        username=email,
-        email=email,
-        password=password,
-        first_name=name
-    )
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            password=password,
+            first_name=name
+        )
 
-    # Force default user
-    Profile.objects.create(
-        user=user,
-        role="USER"
-    )
+        Profile.objects.create(
+            user=user,
+            role="USER"
+        )
 
-    return user
-
+        return user
 
 class CustomTokenSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
