@@ -1,10 +1,39 @@
 import { apiRequest } from "./api.js";
 
+let activeTab = "my"; // "my" or "all"
+
 document.addEventListener("DOMContentLoaded", () => {
   setProfile();
+  setupTabs();
   setupFilters();
   fetchReports();
 });
+
+
+/* ── Tabs ── */
+
+function setupTabs() {
+  const myTab  = document.getElementById("tabMyReports");
+  const allTab = document.getElementById("tabAllReports");
+
+  if (myTab) {
+    myTab.addEventListener("click", () => {
+      activeTab = "my";
+      myTab.classList.add("active");
+      allTab.classList.remove("active");
+      fetchReports();
+    });
+  }
+
+  if (allTab) {
+    allTab.addEventListener("click", () => {
+      activeTab = "all";
+      allTab.classList.add("active");
+      myTab.classList.remove("active");
+      fetchReports();
+    });
+  }
+}
 
 
 /* ── Filters ── */
@@ -55,7 +84,11 @@ async function fetchReports() {
   if (location) params.append("location",    location);
   if (dateFrom) params.append("date_from",   dateFrom);
   if (dateTo)   params.append("date_to",     dateTo);
-  if (email)    params.append("reported_by", email);
+
+  // only filter by email on My Reports tab
+  if (activeTab === "my" && email) {
+    params.append("reported_by", email);
+  }
 
   const query = params.toString() ? `?${params.toString()}` : "";
 
@@ -78,11 +111,34 @@ async function fetchReports() {
 }
 
 
+/* ── Delete report ── */
+
+async function deleteReport(id) {
+  const confirmed = confirm("Are you sure you want to delete this report? This cannot be undone.");
+  if (!confirmed) return;
+
+  try {
+    const res = await apiRequest(`/api/reports/${id}/`, { method: "DELETE" });
+
+    if (res.ok) {
+      fetchReports();
+    } else {
+      const data = await res.json();
+      alert(data.message || "Failed to delete report.");
+    }
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("Something went wrong. Please try again.");
+  }
+}
+
+
 /* ── Render reports ── */
 
 async function renderReports(reports) {
 
   const container = document.getElementById("reportsGrid");
+  const email     = localStorage.getItem("email");
   container.innerHTML = "";
 
   if (!reports.length) {
@@ -97,8 +153,9 @@ async function renderReports(reports) {
 
   for (const report of reports) {
 
-    const card = document.createElement("div");
-    card.className = "report-card";
+    const card       = document.createElement("div");
+    card.className   = "report-card";
+    const isOwner    = report.reported_by_email === email;
 
     let extraSection = "";
 
@@ -121,27 +178,48 @@ async function renderReports(reports) {
                 ${approvedMatch.found_reporter_email}
               </a>
             </div>
-            <button class="history-btn view-btn" data-id="${report.id}">
-              <span class="material-symbols-outlined">search</span>
-              View Matches
-            </button>
+            <div class="report-actions">
+              <button class="history-btn view-btn" data-id="${report.id}">
+                <span class="material-symbols-outlined">search</span>
+                View Matches
+              </button>
+              ${isOwner ? `
+              <button class="history-btn delete-btn" data-id="${report.id}">
+                <span class="material-symbols-outlined">delete</span>
+                Delete
+              </button>` : ""}
+            </div>
           `;
         } else {
           extraSection = `
-            <button class="history-btn view-btn" data-id="${report.id}">
-              <span class="material-symbols-outlined">search</span>
-              View Matches
-            </button>
+            <div class="report-actions">
+              <button class="history-btn view-btn" data-id="${report.id}">
+                <span class="material-symbols-outlined">search</span>
+                View Matches
+              </button>
+              ${isOwner ? `
+              <button class="history-btn delete-btn" data-id="${report.id}">
+                <span class="material-symbols-outlined">delete</span>
+                Delete
+              </button>` : ""}
+            </div>
           `;
         }
 
       } catch (err) {
         console.error("Error fetching matches for LOST report:", err);
         extraSection = `
-          <button class="history-btn view-btn" data-id="${report.id}">
-            <span class="material-symbols-outlined">search</span>
-            View Matches
-          </button>
+          <div class="report-actions">
+            <button class="history-btn view-btn" data-id="${report.id}">
+              <span class="material-symbols-outlined">search</span>
+              View Matches
+            </button>
+            ${isOwner ? `
+            <button class="history-btn delete-btn" data-id="${report.id}">
+              <span class="material-symbols-outlined">delete</span>
+              Delete
+            </button>` : ""}
+          </div>
         `;
       }
 
@@ -158,16 +236,37 @@ async function renderReports(reports) {
         const pendingMatch  = matches.find(m => m.status === "PENDING");
         const approvedMatch = matches.find(m => m.status === "APPROVED");
 
+        let badge = "";
         if (approvedMatch) {
-          extraSection = `<div class="info-badge approved">Claim Approved</div>`;
+          badge = `<div class="info-badge approved">Claim Approved</div>`;
         } else if (pendingMatch) {
-          extraSection = `<div class="info-badge pending">Claim Pending (Waiting for admin approval)</div>`;
+          badge = `<div class="info-badge pending">Claim Pending (Waiting for admin approval)</div>`;
         } else {
-          extraSection = `<div class="info-badge waiting">Waiting for someone to claim</div>`;
+          badge = `<div class="info-badge waiting">Waiting for someone to claim</div>`;
         }
+
+        extraSection = `
+          ${badge}
+          <div class="report-actions">
+            ${isOwner ? `
+            <button class="history-btn delete-btn" data-id="${report.id}">
+              <span class="material-symbols-outlined">delete</span>
+              Delete
+            </button>` : ""}
+          </div>
+        `;
 
       } catch (err) {
         console.error("Error checking match status:", err);
+        extraSection = `
+          <div class="report-actions">
+            ${isOwner ? `
+            <button class="history-btn delete-btn" data-id="${report.id}">
+              <span class="material-symbols-outlined">delete</span>
+              Delete
+            </button>` : ""}
+          </div>
+        `;
       }
 
     }
@@ -190,6 +289,23 @@ async function renderReports(reports) {
               <a href="mailto:${approvedMatch.found_reporter_email}">
                 ${approvedMatch.found_reporter_email}
               </a>
+            </div>
+            <div class="report-actions">
+              ${isOwner ? `
+              <button class="history-btn delete-btn" data-id="${report.id}">
+                <span class="material-symbols-outlined">delete</span>
+                Delete
+              </button>` : ""}
+            </div>
+          `;
+        } else {
+          extraSection = `
+            <div class="report-actions">
+              ${isOwner ? `
+              <button class="history-btn delete-btn" data-id="${report.id}">
+                <span class="material-symbols-outlined">delete</span>
+                Delete
+              </button>` : ""}
             </div>
           `;
         }
@@ -221,8 +337,14 @@ async function renderReports(reports) {
   /* View Matches buttons */
   document.querySelectorAll(".view-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      const id = btn.dataset.id;
-      window.location.href = `report-matches.html?id=${id}`;
+      window.location.href = `report-matches.html?id=${btn.dataset.id}`;
+    });
+  });
+
+  /* Delete buttons */
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      deleteReport(btn.dataset.id);
     });
   });
 
