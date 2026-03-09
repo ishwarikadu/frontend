@@ -68,12 +68,13 @@ def reports(request):
         qs = Report.objects.all().order_by("-created_at")
 
         # --- FILTERS ---
-        status_filter   = request.GET.get("status")
-        category_filter = request.GET.get("category")
-        location_filter = request.GET.get("location")
-        search_query    = request.GET.get("search")
-        date_from       = request.GET.get("date_from")   # YYYY-MM-DD
-        date_to         = request.GET.get("date_to")     # YYYY-MM-DD
+        status_filter      = request.GET.get("status")
+        category_filter    = request.GET.get("category")
+        location_filter    = request.GET.get("location")
+        search_query       = request.GET.get("search")
+        date_from          = request.GET.get("date_from")    # YYYY-MM-DD
+        date_to            = request.GET.get("date_to")      # YYYY-MM-DD
+        reported_by_filter = request.GET.get("reported_by")  # email
 
         if status_filter:
             qs = qs.filter(status=status_filter.upper())
@@ -96,9 +97,54 @@ def reports(request):
         if date_to:
             qs = qs.filter(date__lte=date_to)
 
-            reported_by_filter = request.GET.get("reported_by")
         if reported_by_filter:
             qs = qs.filter(reported_by__email=reported_by_filter)
+
+        # --- PAGINATION ---
+        try:
+            page  = int(request.GET.get("page", 1))
+            limit = int(request.GET.get("limit", 10))
+        except ValueError:
+            return error_response("page and limit must be integers", status=400)
+
+        if page < 1 or limit < 1:
+            return error_response("page and limit must be positive numbers", status=400)
+
+        start        = (page - 1) * limit
+        end          = start + limit
+        total_count  = qs.count()
+        paginated_qs = qs[start:end]
+
+        return success_response(
+            "Reports fetched successfully",
+            {
+                "total":   total_count,
+                "page":    page,
+                "limit":   limit,
+                "results": ReportSerializer(paginated_qs, many=True).data
+            }
+        )
+
+    if request.method == "POST":
+        serializer = ReportSerializer(data=request.data)
+
+        if serializer.is_valid():
+            report_type = request.query_params.get("type", "lost").lower()
+
+            if report_type == "found":
+                serializer.save(reported_by=request.user, status="FOUND")
+            else:
+                serializer.save(reported_by=request.user, status="LOST")
+
+            return success_response(
+                "Report created successfully",
+                serializer.data,
+                status=201
+            )
+
+        return error_response("Validation failed", serializer.errors, status=400)
+
+
 
         # --- PAGINATION ---
         try:
