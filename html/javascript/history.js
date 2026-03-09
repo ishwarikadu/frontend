@@ -153,167 +153,177 @@ async function renderReports(reports) {
 
   for (const report of reports) {
 
-    const card       = document.createElement("div");
-    card.className   = "report-card";
-    const isOwner    = report.reported_by_email === email;
+    const card    = document.createElement("div");
+    card.className = "report-card";
+    const isOwner = report.reported_by_email === email;
 
     let extraSection = "";
 
-    /* LOST REPORT */
-    if (report.status === "LOST") {
+    // ── MY REPORTS TAB — fetch match status ──
+    if (activeTab === "my") {
 
-      try {
-        const matchRes  = await apiRequest(`/api/reports/${report.id}/matches/`);
-        const matchData = await matchRes.json();
-        const matches   = Array.isArray(matchData.message) ? matchData.message : [];
+      /* LOST */
+      if (report.status === "LOST") {
+        try {
+          const matchRes  = await apiRequest(`/api/reports/${report.id}/matches/`);
+          const matchData = await matchRes.json();
+          const matches   = Array.isArray(matchData.message) ? matchData.message : [];
+          const approved  = matches.find(m => m.status === "APPROVED");
 
-        const approvedMatch = matches.find(m => m.status === "APPROVED");
-
-        if (approvedMatch) {
+          if (approved) {
+            extraSection = `
+              <div class="info-badge approved">Match Found &amp; Approved!</div>
+              <div class="contact-box">
+                Contact Finder:
+                <a href="mailto:${approved.found_reporter_email}">
+                  ${approved.found_reporter_email}
+                </a>
+              </div>
+              <div class="report-actions">
+                <button class="history-btn view-btn" data-id="${report.id}">
+                  <span class="material-symbols-outlined">search</span>
+                  View Matches
+                </button>
+                <button class="history-btn delete-btn" data-id="${report.id}">
+                  <span class="material-symbols-outlined">delete</span>
+                  Delete
+                </button>
+              </div>
+            `;
+          } else {
+            extraSection = `
+              <div class="report-actions">
+                <button class="history-btn view-btn" data-id="${report.id}">
+                  <span class="material-symbols-outlined">search</span>
+                  View Matches
+                </button>
+                <button class="history-btn delete-btn" data-id="${report.id}">
+                  <span class="material-symbols-outlined">delete</span>
+                  Delete
+                </button>
+              </div>
+            `;
+          }
+        } catch (err) {
+          console.error("Error fetching matches:", err);
           extraSection = `
-            <div class="info-badge approved">Match Found &amp; Approved!</div>
-            <div class="contact-box">
-              Contact Finder:
-              <a href="mailto:${approvedMatch.found_reporter_email}">
-                ${approvedMatch.found_reporter_email}
-              </a>
-            </div>
             <div class="report-actions">
               <button class="history-btn view-btn" data-id="${report.id}">
                 <span class="material-symbols-outlined">search</span>
                 View Matches
               </button>
-              ${isOwner ? `
               <button class="history-btn delete-btn" data-id="${report.id}">
                 <span class="material-symbols-outlined">delete</span>
                 Delete
-              </button>` : ""}
-            </div>
-          `;
-        } else {
-          extraSection = `
-            <div class="report-actions">
-              <button class="history-btn view-btn" data-id="${report.id}">
-                <span class="material-symbols-outlined">search</span>
-                View Matches
               </button>
-              ${isOwner ? `
-              <button class="history-btn delete-btn" data-id="${report.id}">
-                <span class="material-symbols-outlined">delete</span>
-                Delete
-              </button>` : ""}
             </div>
           `;
         }
+      }
 
-      } catch (err) {
-        console.error("Error fetching matches for LOST report:", err);
+      /* FOUND */
+      else if (report.status === "FOUND") {
+        try {
+          const matchRes  = await apiRequest(`/api/reports/${report.id}/matches/`);
+          const matchData = await matchRes.json();
+          const matches   = Array.isArray(matchData.message) ? matchData.message : [];
+          const pending   = matches.find(m => m.status === "PENDING");
+          const approved  = matches.find(m => m.status === "APPROVED");
+
+          let badge = "";
+          if (approved)     badge = `<div class="info-badge approved">Claim Approved</div>`;
+          else if (pending) badge = `<div class="info-badge pending">Claim Pending (Waiting for admin approval)</div>`;
+          else              badge = `<div class="info-badge waiting">Waiting for someone to claim</div>`;
+
+          extraSection = `
+            ${badge}
+            <div class="report-actions">
+              <button class="history-btn delete-btn" data-id="${report.id}">
+                <span class="material-symbols-outlined">delete</span>
+                Delete
+              </button>
+            </div>
+          `;
+        } catch (err) {
+          console.error("Error checking match status:", err);
+          extraSection = `
+            <div class="report-actions">
+              <button class="history-btn delete-btn" data-id="${report.id}">
+                <span class="material-symbols-outlined">delete</span>
+                Delete
+              </button>
+            </div>
+          `;
+        }
+      }
+
+      /* RETURNED */
+      else if (report.status === "RETURNED") {
+        try {
+          const matchRes  = await apiRequest(`/api/reports/${report.id}/matches/`);
+          const matchData = await matchRes.json();
+          const matches   = Array.isArray(matchData.message) ? matchData.message : [];
+          const approved  = matches.find(m => m.status === "APPROVED");
+
+          if (approved) {
+            extraSection = `
+              <div class="info-badge approved">Match Approved</div>
+              <div class="contact-box">
+                Contact Finder:
+                <a href="mailto:${approved.found_reporter_email}">
+                  ${approved.found_reporter_email}
+                </a>
+              </div>
+              <div class="report-actions">
+                <button class="history-btn delete-btn" data-id="${report.id}">
+                  <span class="material-symbols-outlined">delete</span>
+                  Delete
+                </button>
+              </div>
+            `;
+          } else {
+            extraSection = `
+              <div class="report-actions">
+                <button class="history-btn delete-btn" data-id="${report.id}">
+                  <span class="material-symbols-outlined">delete</span>
+                  Delete
+                </button>
+              </div>
+            `;
+          }
+        } catch (err) {
+          console.error("Error fetching approved match:", err);
+        }
+      }
+
+    }
+
+    // ── ALL REPORTS TAB — no match fetching, just show cards ──
+    else {
+      // only show View Matches button on LOST reports the user owns
+      if (report.status === "LOST" && isOwner) {
         extraSection = `
           <div class="report-actions">
             <button class="history-btn view-btn" data-id="${report.id}">
               <span class="material-symbols-outlined">search</span>
               View Matches
             </button>
-            ${isOwner ? `
             <button class="history-btn delete-btn" data-id="${report.id}">
               <span class="material-symbols-outlined">delete</span>
               Delete
-            </button>` : ""}
+            </button>
           </div>
         `;
-      }
-
-    }
-
-    /* FOUND REPORT */
-    else if (report.status === "FOUND") {
-
-      try {
-        const matchRes  = await apiRequest(`/api/reports/${report.id}/matches/`);
-        const matchData = await matchRes.json();
-        const matches   = Array.isArray(matchData.message) ? matchData.message : [];
-
-        const pendingMatch  = matches.find(m => m.status === "PENDING");
-        const approvedMatch = matches.find(m => m.status === "APPROVED");
-
-        let badge = "";
-        if (approvedMatch) {
-          badge = `<div class="info-badge approved">Claim Approved</div>`;
-        } else if (pendingMatch) {
-          badge = `<div class="info-badge pending">Claim Pending (Waiting for admin approval)</div>`;
-        } else {
-          badge = `<div class="info-badge waiting">Waiting for someone to claim</div>`;
-        }
-
-        extraSection = `
-          ${badge}
-          <div class="report-actions">
-            ${isOwner ? `
-            <button class="history-btn delete-btn" data-id="${report.id}">
-              <span class="material-symbols-outlined">delete</span>
-              Delete
-            </button>` : ""}
-          </div>
-        `;
-
-      } catch (err) {
-        console.error("Error checking match status:", err);
+      } else if (isOwner) {
         extraSection = `
           <div class="report-actions">
-            ${isOwner ? `
             <button class="history-btn delete-btn" data-id="${report.id}">
               <span class="material-symbols-outlined">delete</span>
               Delete
-            </button>` : ""}
+            </button>
           </div>
         `;
       }
-
-    }
-
-    /* RETURNED REPORT */
-    else if (report.status === "RETURNED") {
-
-      try {
-        const matchRes  = await apiRequest(`/api/reports/${report.id}/matches/`);
-        const matchData = await matchRes.json();
-        const matches   = Array.isArray(matchData.message) ? matchData.message : [];
-
-        const approvedMatch = matches.find(m => m.status === "APPROVED");
-
-        if (approvedMatch) {
-          extraSection = `
-            <div class="info-badge approved">Match Approved</div>
-            <div class="contact-box">
-              Contact Finder:
-              <a href="mailto:${approvedMatch.found_reporter_email}">
-                ${approvedMatch.found_reporter_email}
-              </a>
-            </div>
-            <div class="report-actions">
-              ${isOwner ? `
-              <button class="history-btn delete-btn" data-id="${report.id}">
-                <span class="material-symbols-outlined">delete</span>
-                Delete
-              </button>` : ""}
-            </div>
-          `;
-        } else {
-          extraSection = `
-            <div class="report-actions">
-              ${isOwner ? `
-              <button class="history-btn delete-btn" data-id="${report.id}">
-                <span class="material-symbols-outlined">delete</span>
-                Delete
-              </button>` : ""}
-            </div>
-          `;
-        }
-
-      } catch (err) {
-        console.error("Error fetching approved match:", err);
-      }
-
     }
 
     card.innerHTML = `
