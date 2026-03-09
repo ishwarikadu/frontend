@@ -34,7 +34,6 @@ async function fetchReports() {
 
   const container = document.getElementById("reportsGrid");
 
-  // show loading spinner
   container.innerHTML = `
     <div class="loading-state">
       <span class="material-symbols-outlined spin">autorenew</span>
@@ -42,7 +41,6 @@ async function fetchReports() {
     </div>
   `;
 
-  // build query params from filters
   const params = new URLSearchParams();
 
   const status   = document.getElementById("filterStatus")?.value;
@@ -50,12 +48,14 @@ async function fetchReports() {
   const location = document.getElementById("filterLocation")?.value;
   const dateFrom = document.getElementById("filterDateFrom")?.value;
   const dateTo   = document.getElementById("filterDateTo")?.value;
+  const email    = localStorage.getItem("email");
 
-  if (status)   params.append("status",    status);
-  if (category) params.append("category",  category);
-  if (location) params.append("location",  location);
-  if (dateFrom) params.append("date_from", dateFrom);
-  if (dateTo)   params.append("date_to",   dateTo);
+  if (status)   params.append("status",      status);
+  if (category) params.append("category",    category);
+  if (location) params.append("location",    location);
+  if (dateFrom) params.append("date_from",   dateFrom);
+  if (dateTo)   params.append("date_to",     dateTo);
+  if (email)    params.append("reported_by", email);
 
   const query = params.toString() ? `?${params.toString()}` : "";
 
@@ -106,20 +106,15 @@ async function renderReports(reports) {
     if (report.status === "LOST") {
 
       try {
-
         const matchRes  = await apiRequest(`/api/reports/${report.id}/matches/`);
         const matchData = await matchRes.json();
         const matches   = Array.isArray(matchData.message) ? matchData.message : [];
-
-        console.log(`LOST report ${report.id} matches:`, matches.map(m => ({ id: m.id, status: m.status })));
 
         const approvedMatch = matches.find(m => m.status === "APPROVED");
 
         if (approvedMatch) {
           extraSection = `
-            <div class="info-badge approved">
-              Match Found &amp; Approved!
-            </div>
+            <div class="info-badge approved">Match Found &amp; Approved!</div>
             <div class="contact-box">
               Contact Finder:
               <a href="mailto:${approvedMatch.found_reporter_email}">
@@ -156,7 +151,6 @@ async function renderReports(reports) {
     else if (report.status === "FOUND") {
 
       try {
-
         const matchRes  = await apiRequest(`/api/reports/${report.id}/matches/`);
         const matchData = await matchRes.json();
         const matches   = Array.isArray(matchData.message) ? matchData.message : [];
@@ -182,7 +176,6 @@ async function renderReports(reports) {
     else if (report.status === "RETURNED") {
 
       try {
-
         const matchRes  = await apiRequest(`/api/reports/${report.id}/matches/`);
         const matchData = await matchRes.json();
         const matches   = Array.isArray(matchData.message) ? matchData.message : [];

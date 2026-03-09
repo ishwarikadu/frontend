@@ -96,6 +96,10 @@ def reports(request):
         if date_to:
             qs = qs.filter(date__lte=date_to)
 
+            reported_by_filter = request.GET.get("reported_by")
+        if reported_by_filter:
+            qs = qs.filter(reported_by__email=reported_by_filter)
+
         # --- PAGINATION ---
         try:
             page  = int(request.GET.get("page", 1))
